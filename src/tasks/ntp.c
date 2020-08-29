@@ -4,11 +4,8 @@
 #include "freertos/event_groups.h"
 #include <time.h>
 #include <sys/time.h>
-#include "esp_event.h"
 #include "esp_log.h"
 #include "esp_sntp.h"
-#include "esp_system.h"
-#include "esp_attr.h"
 #include "network.h"
 
 static const char* TAG = "NTP";
