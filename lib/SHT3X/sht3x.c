@@ -113,6 +113,12 @@ void sht3x_fetch_periodic(sht3x_t* sht3x, sht3x_reading_t* sht3x_reading){
 	sht3x_get_measurements(sht3x, sht3x_reading);
 }
 
+void sht3x_stop_periodic(sht3x_t* sht3x){
+
+	//0x3093 - Break/Stop periodic data acquisition
+	sht3x_write_command(sht3x, 0x3093);
+}
+
 void sht3x_status(sht3x_t* sht3x, sht3x_status_t* sht3x_status) {
 
 	//0xF32D - Fetch status register

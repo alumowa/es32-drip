@@ -105,6 +105,7 @@ int sht3x_initialize(sht3x_t* sht3x, i2c_config_t i2c_config);
 void sht3x_oneshot(sht3x_t* sht3x, sht3x_reading_t* sht3x_reading, sht3x_oneshot_t mode);
 void sht3x_set_periodic(sht3x_t* sht3x, sht3x_periodic_t mode);
 void sht3x_fetch_periodic(sht3x_t* sht3x, sht3x_reading_t* sht3x_reading);
+void sht3x_stop_periodic(sht3x_t* sht3x);
 void sht3x_status(sht3x_t* sht3x, sht3x_status_t* sht3x_status);
 
 #endif // _SHT3X_H
