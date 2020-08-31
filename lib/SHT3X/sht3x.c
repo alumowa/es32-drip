@@ -1,6 +1,5 @@
 #include "sht3x.h"
 
-
 static void sht3x_read_into(sht3x_t* sht3x, uint8_t data[], int length) {
 
 	i2c_cmd_handle_t cmd_handle = i2c_cmd_link_create();
@@ -26,6 +25,34 @@ static void sht3x_write_command(sht3x_t* sht3x, uint16_t command){
 	i2c_cmd_link_delete(cmd_handle);
 }
 
+static bool sht3x_crc(uint8_t* result){
+
+	const int len = 6;		//[MSB][LSB][CRC]
+	const int width = 8;
+	uint8_t crc = 0xFF;		//Initial value
+	uint8_t poly = 0x31;	//(x^8 + x^5 + x^4 + 1)
+
+	int c;
+
+	for(int i = 0; i < len; i++){
+
+		//Validate every 3rd byte. Bail if fail otherwise
+		//reset to crc initial.
+		if(i % 3 == 2){
+			if(crc != result[i]) return false;
+			crc = 0xFF;
+		}else{
+			crc ^= result[i];
+
+			for ( c = 0; c < width; c++ ) {
+				crc = ( crc & 0x80 )? (crc << 1) ^ poly : (crc << 1);
+			}
+		}
+	}
+
+	return true;
+}
+
 int sht3x_initialize(sht3x_t* sht3x, i2c_config_t i2c_config) {
 
 	esp_err_t err;
@@ -44,15 +71,22 @@ void sht3x_readOnce(sht3x_t* sht3x, sht3x_reading_t* sht3x_reading, sht3x_onesho
 
 	sht3x_write_command(sht3x, mode);
 
-	uint8_t result_raw[6] = {1, 2, 3, 4, 5, 6};
+	uint8_t result_raw[6] = {0};
 	sht3x_read_into(sht3x, result_raw, sizeof(result_raw));
+
+	//If crc mismatch, set valid flag to false and bail
+	if(!sht3x_crc(result_raw)){
+		sht3x_reading->valid = false;
+		return;
+	}
 
 	uint16_t temp_raw = (result_raw[0] << 8) | result_raw[1];
 	uint16_t hum_raw = (result_raw[3] << 8) | result_raw[4];
 
 	sht3x_reading->temp_c = -45 + (175 * temp_raw / (65535.0 - 1));
-	sht3x_reading->temp_f = -49 + (315 * temp_raw / (65535.0 - 1));
+	sht3x_reading->temp_f = 32 + (sht3x_reading->temp_c * 1.8);
 	sht3x_reading->hum = 100 * hum_raw / 65535.0;
+	sht3x_reading->valid = true;
 }
 
 void sht3x_status(sht3x_t* sht3x, sht3x_status_t* sht3x_status) {

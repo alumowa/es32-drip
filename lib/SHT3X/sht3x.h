@@ -71,8 +71,7 @@ typedef struct {
   float temp_c;               /* Temperature reading in celsius */
   float temp_f;               /* Temperature reading in fahrenheit */
   float hum;                  /* Relative humidity reading in % */
-  bool temp_valid;            /* Set when temp data crc is valid */
-  bool hum_vald;              /* Set when hum data crc is valid */
+  bool valid;                 /* Set when crc matched */
 } sht3x_reading_t;
 
 typedef struct {

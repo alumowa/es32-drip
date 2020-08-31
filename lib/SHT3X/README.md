@@ -4,7 +4,6 @@ Lib to interface with Sensirion SHT3X temp + hum sensors.
 
 ## TODO:
 
-* CRC8 Support
 * Add periodic sampling mode
 
 ## Usage
@@ -21,7 +20,12 @@ void tempTask(){
         sht3x_reading_t reading = {0};
         sht3x_readOnce(&sht3x, &reading, SHT3X_CS_MEDREP);
 
-        printf("Temp (%fC %fF)   Hum: %f%%\n", reading.temp_c, reading.temp_f, reading.hum);
+        if(reading.valid){
+            printf("Temp (%fC %fF)   Hum: %f%%\n", reading.temp_c, reading.temp_f, reading.hum);
+        }else{
+            //Crc check failed
+        }
+
 
         vTaskDelay(1000 / portTICK_PERIOD_MS);
 
