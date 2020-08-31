@@ -81,7 +81,7 @@ typedef struct {
 
 
 int sht3x_initialize(sht3x_t* sht3x, i2c_config_t i2c_config);
-void sht3x_readOnce(sht3x_t* sht3x, sht3x_reading_t* sht3x_reading, sht3x_oneshot_t mode);
+void sht3x_oneshot(sht3x_t* sht3x, sht3x_reading_t* sht3x_reading, sht3x_oneshot_t mode);
 void sht3x_status(sht3x_t* sht3x, sht3x_status_t* sht3x_status);
 
 #endif // _SHT3X_H
