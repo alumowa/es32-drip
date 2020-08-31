@@ -107,5 +107,6 @@ void sht3x_set_periodic(sht3x_t* sht3x, sht3x_periodic_t mode);
 void sht3x_fetch_periodic(sht3x_t* sht3x, sht3x_reading_t* sht3x_reading);
 void sht3x_stop_periodic(sht3x_t* sht3x);
 void sht3x_status(sht3x_t* sht3x, sht3x_status_t* sht3x_status);
+void sht3x_soft_reset(sht3x_t* sht3x);
 
 #endif // _SHT3X_H

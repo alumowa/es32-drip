@@ -119,6 +119,12 @@ void sht3x_stop_periodic(sht3x_t* sht3x){
 	sht3x_write_command(sht3x, 0x3093);
 }
 
+void sht3x_soft_reset(sht3x_t* sht3x){
+
+	//0x30A2 - Soft reset
+	sht3x_write_command(sht3x, 0x30A2);
+}
+
 void sht3x_status(sht3x_t* sht3x, sht3x_status_t* sht3x_status) {
 
 	//0xF32D - Fetch status register
